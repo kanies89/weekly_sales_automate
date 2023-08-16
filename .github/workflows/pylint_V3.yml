@@ -15,9 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set working directory
-        run: cd ../
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -28,12 +25,10 @@ jobs:
         run: pip install pyodbc
         
       - name: Build executable
-        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=../UI/logos/icon.ico ../ui.py
+        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=UI/logos/icon.ico weekly_sales_automate/ui.py
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
           name: Weekly_Sales_Channel_Report
           path: dist/Weekly_Sales_Channel_Report.exe
-
-
