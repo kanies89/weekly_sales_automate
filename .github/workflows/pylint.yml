@@ -28,7 +28,7 @@ jobs:
         run: pip install pyodbc
         
       - name: Build executable
-        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=UI/logos/icon.ico ui.py
+        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=UI/logos/Paytel_1.png ui.py
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
