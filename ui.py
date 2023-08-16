@@ -108,9 +108,10 @@ class MyDialog(QDialog):
         # Start the automation thread
         self.automation_thread.start()
 
-    def on_finished_clicked(self):
-        # Start the automation thread
-        self.exit()
+    @staticmethod
+    def on_finished_clicked():
+        # Close the application
+        QApplication.quit()  # or sys.exit()
 
     def on_automation_finished(self):
         # Enable the "Start" button when the automation is finished
