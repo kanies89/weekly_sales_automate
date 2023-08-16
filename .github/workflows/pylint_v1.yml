@@ -1,4 +1,4 @@
-name: pyinstaller - Build and Publish v2
+name: pyinstaller - Build and Publish - Weekly_Sales_Channel_Report
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         run: pip install pyodbc
         
       - name: Build executable
-        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=UI/logos/Paytel_1.png ui.py
+        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report --icon=UI/logos/Paytel_1.ico ui.py
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
