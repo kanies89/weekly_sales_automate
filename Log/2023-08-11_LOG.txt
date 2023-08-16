@@ -1,0 +1,39 @@
+starting the function
+
+
+Folder structure already exists.
+
+
+Folder structure already exists.
+
+
+week_number: 
+ 
+31
+
+
+prev_week_number: 
+ 
+30
+
+
+Folder structure already exists.
+
+
+191
+
+
+192
+
+
+193
+
+
+194
+
+
+195
+
+
+196
+

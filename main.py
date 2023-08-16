@@ -10,8 +10,10 @@ from connect import connect
 from PyQt5.QtCore import pyqtSignal, QObject
 from openpyxl.utils import get_column_letter
 
+
 SHEETS = ['contracts_terminals', 'transactions']
 TEMP = './TEMP/'
+progress_count = 100
 
 
 class Logger(QObject):
@@ -63,15 +65,21 @@ def week(override=None):
 def to_log():
     report_date = datetime.datetime.now().strftime("%Y-%m-%d")
     file_name = f'Log/{report_date}_LOG.txt'
-    with open(file_name, 'a') as log:
-        log.write(f"\nReport start -AR2- --{report_date}--\n")
+    with open(file_name, 'w') as log:
+        log.write(f"\nReport start --{report_date}--\n")
     return file_name
 
 
-def copy_wb(from_workbook, to_workbook, dataframe, sheets):
+def copy_wb(from_workbook, to_workbook, dataframe, sheets, progress_callback=None):
     # Load the existing workbook
     wb = openpyxl.load_workbook(from_workbook)
     for sheet_name in sheets:
+        # Set progress
+        if progress_callback:
+            progress_count -= 8
+            step = round(100 * (1 - (progress_count / 100)), 0)
+            progress_callback(int(step))
+
         sheet = wb[sheet_name]
         for row in dataframe[sheet_name].index:
             for col in dataframe[sheet_name].columns:
@@ -157,14 +165,31 @@ def load_df(length, path):
     return df
 
 
-def load_or_query(length, name, temp_table, query):
+def load_or_query(length, name, temp_table, query, progress_callback=None, progress_callback_text=None):
+    global progress_count
     for i in range(length):
+
+        # Set progress
+        if progress_callback:
+            progress_count -= 2
+            step = round(100 * (1 - (progress_count / 100)), 0)
+            progress_callback(int(step))
+
+        # Set progress text
+        if progress_callback_text:
+            progress_callback_text(f'Loading saved data {i + 1}/{length}.')
+
         if os.path.exists(f'{TEMP}{name}{i}.csv'):
             if i == (length - 1) and os.path.exists(f'{TEMP}{name}{i}.csv'):
                 dataframe = load_df(length, f'{TEMP}{name}')
                 break
             continue
         else:
+
+            # Set progress text
+            if progress_callback_text:
+                progress_callback_text(f'Querying the Database {i + 1}/{length}.')
+
             dataframe = connect(temp_table, query)
             i = 0
             for df in dataframe:
@@ -245,12 +270,33 @@ def check_and_add_sum_column(date, df_workbook, column_0, column_1):
     return current_year_set
 
 
-def automate_report():
+def automate_report(progress_callback=None, progress_callback_text=None):
+    global progress_count
+
+    create_folder_structure('./Log')
+    create_folder_structure('./TEMP')
+
+    # Set progress
+    if progress_callback:
+        progress_count -= 1
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
+
     date = week()
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Reading the data ...sales channel_with_txns_v3_w{date[1]}.xlsx')
+
     # Last report
     path_prev = f'./{date[3]}/w{date[1]}/PayTel - weekly report - Sales KPIs by sales channel_with_txns_v3_w{date[1]}.xlsx'
     # New report
     create_folder_structure(f'./{date[2]}/w{date[0]}')
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Creating excel sheet for new data ...sales channel_with_txns_v3_w{date[0]}.xlsx')
+
     path_new = f'./{date[2]}/w{date[0]}/PayTel - weekly report - Sales KPIs by sales channel_with_txns_v3_w{date[0]}.xlsx'
     df_workbook = pd.read_excel(path_prev, sheet_name=SHEETS, header=None, keep_default_na=False)
 
@@ -272,15 +318,34 @@ def automate_report():
     df_workbook[SHEETS[1]].rename(columns=dict(zip(old_columns, new_columns)), inplace=True)
     df_workbook[SHEETS[1]].insert(loc=column_0, column=column_0, value=new_col)
 
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Inserting new columns ...sales channel_with_txns_v3_w{date[0]}.xlsx')
+
+    # Set progress
+    if progress_callback:
+        progress_count -= 1
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
+
     # Check if there are sum columns for current year
     current_year = check_and_add_sum_column(date, df_workbook, column_0, column_1)
 
     temp_table = 'Query/Temp.sql'
     query = 'Query/Query.sql'
-    data = load_or_query(19, f'df_workbook_{date[1]}', temp_table, query)
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Querying the Database.')
+
+    data = load_or_query(19, f'df_workbook_{date[1]}', temp_table, query, progress_callback, progress_callback_text)
 
     df_title = []
     df_views = []
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Making the dataframe views.')
 
     # SHEET 0 i in range(3)
     for i in range(3):
@@ -325,6 +390,11 @@ def automate_report():
     k = 0
     # Add new values taken from Query
     for v, df_view in enumerate(df_views):
+
+        # Set progress text
+        if progress_callback_text:
+            progress_callback_text(f'Adding data to new tables (table {v + 1} / {len(df_views)}')
+
         if v not in (13, 15, 16, 17, 18, 20, 21, 22):
             for j in range(df_view.shape[0] - 1):
                 df_view.iat[j, column_0] = data[k].iat[j, data[k].shape[1] - 1]
@@ -373,9 +443,20 @@ def automate_report():
         else:
             print('Error')
 
+    # Set progress
+    if progress_callback:
+        progress_count -= 5
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
+
     # Sum values.
     # Add new values using formula
     for v, df_view in enumerate(df_views):
+
+        # Set progress text
+        if progress_callback_text:
+            progress_callback_text(f'Adding Total Sum Values (table number {v})')
+
         if v not in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22):
             df_sum = df_view.iloc[:, column_0 + 1 - date[0]: column_0 + 1]
             df_sum_sum = df_sum.apply(row_sum_numeric, axis=1)
@@ -406,6 +487,11 @@ def automate_report():
     # Add new values using formula
     for v, df_view in enumerate(df_views):
         if v in (3, 4, 5, 6):
+
+            # Set progress text
+            if progress_callback_text:
+                progress_callback_text(f'Adding Total Sum Percentage Values (table number {v})')
+
             df_sum = df_view.iloc[:df_view.shape[0] - 1, column_0 + 1]
             df_sum_sum = df_sum.sum()
 
@@ -415,6 +501,11 @@ def automate_report():
     # Bottom sum.
     # Add new values using formula
     for v, df_view in enumerate(df_views):
+
+        # Set progress text
+        if progress_callback_text:
+            progress_callback_text(f'Adding Bottom Sum (table {v})')
+
         if v in range(3):
             sheet = 0
         elif v in range(3, 7):
@@ -474,17 +565,36 @@ def automate_report():
             else:
                 break
 
+    # Set progress
+    if progress_callback:
+        progress_count -= 5
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
+
     df_workbook[SHEETS[0]].to_excel('1.xlsx')
     df_workbook[SHEETS[1]].to_excel('2.xlsx')
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Adding saving copy.')
 
     wb = copy_wb(path_prev, path_new, df_workbook, SHEETS)
 
     target_workbook = openpyxl.load_workbook(path_new)
     source_workbook = openpyxl.load_workbook(path_prev)
 
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Copying table format for SHEET 0')
+
     # SHEET[0]
     for i in range(1, column_0 + 1):
         copy_column_formatting(source_workbook, target_workbook, i, i, path_new, 0)
+    # Set progress
+    if progress_callback:
+        progress_count -= 14
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
 
     # Copy formatting from column H (188) to column I (189) for the target
     copy_column_formatting(source_workbook, target_workbook, column_0, column_0 + 1, path_new, 0)
@@ -495,10 +605,25 @@ def automate_report():
     for i in range(column_0, last_column):
         print(1 + i)
         copy_column_formatting(source_workbook, target_workbook, i, 1 + i, path_new, 0)
+    # Set progress
+    if progress_callback:
+        progress_count -= 15
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
+
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Copying table format for SHEET 1')
 
     # SHEET[1]
     for i in range(1, column_1 + 1):
         copy_column_formatting(source_workbook, target_workbook, i, i, path_new, 1)
+
+    # Set progress
+    if progress_callback:
+        progress_count -= 8
+        step = round(100*(1-(progress_count/100)), 0)
+        progress_callback(int(step))
 
     # Copy formatting from column H (188) to column I (189) for the target
     copy_column_formatting(source_workbook, target_workbook, column_1, column_1 + 1, path_new, 1)
@@ -508,9 +633,19 @@ def automate_report():
     for i in range(0, last_column):
         copy_column_formatting(source_workbook, target_workbook, column_1 + i, column_1 + 1 + i, path_new, 1)
 
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Saving...')
+
     # Save the updated workbook
     target_workbook.save(path_new)
+    # Set progress
+    if progress_callback:
+        progress_callback(100)
 
+    # Set progress text
+    if progress_callback_text:
+        progress_callback_text(f'Finished.')
 
 if __name__ == '__main__':
-    automate_report()
+    automate_report(progress_callback=None)
