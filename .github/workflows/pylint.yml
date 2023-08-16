@@ -28,7 +28,7 @@ jobs:
         run: pip install pyodbc
         
       - name: Build executable
-        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report main.py
+        run: pyinstaller --onefile --name Weekly_Sales_Channel_Report ui.py
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
