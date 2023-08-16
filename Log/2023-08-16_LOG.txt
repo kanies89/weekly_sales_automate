@@ -17,7 +17,7 @@ prev_week_number:
 31
 
 
-Folder structure created successfully.
+Folder structure already exists.
 
 
 192
