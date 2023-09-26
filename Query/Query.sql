@@ -61,7 +61,7 @@ ORDER BY sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 
 
@@ -79,7 +79,7 @@ ORDER BY c.sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 		
 		
 		
@@ -245,7 +245,7 @@ order by c.sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 select  
  c.sort,c.sc,sales_channel2,d.rok,
@@ -268,7 +268,7 @@ order by c.sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 select  
  c.sort,c.sc,sales_channel2,d.rok,
@@ -291,7 +291,7 @@ order by c.sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 select  
  c.sort,c.sc,sales_channel2,d.rok,
@@ -315,7 +315,7 @@ order by c.sort
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 select  
  c.sort,c.sc,sales_channel2,d.rok,

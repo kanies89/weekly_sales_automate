@@ -229,13 +229,13 @@ def check_and_add_sum_column(date, df_workbook, column_0, column_1):
     # Check if Sum columns exist for current year in SHEET[0]
     check_sum_col = df_workbook[SHEETS[0]].iloc[5].tolist()
 
-    if f' {date[2]} Total' not in check_sum_col:
+    if f'{date[2]} Total' not in check_sum_col:
 
         current_year_set = False
         sum_column = column_0 + 1
 
         new_col = df_workbook[SHEETS[0]].iloc[:, sum_column - 1].copy()
-        new_col.loc[5] = f' {date[2]} Total'
+        new_col.loc[5] = f'{date[2]} Total'
 
         old_columns = range(sum_column, df_workbook[SHEETS[0]].shape[1])
         new_columns = range(sum_column + 1, df_workbook[SHEETS[0]].shape[1] + 1)
@@ -244,13 +244,13 @@ def check_and_add_sum_column(date, df_workbook, column_0, column_1):
 
     # Check if Sum columns exist for current year in SHEET [1]
     check_sum_col = df_workbook[SHEETS[1]].iloc[5].tolist()
-    if f' {date[2]} Total' not in check_sum_col:
+    if f'{date[2]} Total' not in check_sum_col:
 
         current_year_set = False
         sum_column = column_1 + 1
 
         new_col = df_workbook[SHEETS[1]].iloc[:, sum_column].copy()
-        new_col.loc[5] = f' {date[2]} Total'
+        new_col.loc[5] = f'{date[2]} Total'
 
         old_columns = range(sum_column, df_workbook[SHEETS[1]].shape[1])
         new_columns = range(sum_column + 1, df_workbook[SHEETS[1]].shape[1] + 1)
@@ -260,7 +260,7 @@ def check_and_add_sum_column(date, df_workbook, column_0, column_1):
         position = sum_column + date[2] - 2019
 
         new_col = df_workbook[SHEETS[1]].iloc[:, position].copy()
-        new_col.loc[5] = f' {date[2]} Total'
+        new_col.loc[5] = f'{date[2]} Total'
 
         old_columns = range(position, df_workbook[SHEETS[1]].shape[1])
         new_columns = range(position + 1, df_workbook[SHEETS[1]].shape[1] + 1)
@@ -268,6 +268,22 @@ def check_and_add_sum_column(date, df_workbook, column_0, column_1):
         df_workbook[SHEETS[1]].insert(loc=position, column=position, value=new_col)
 
     return current_year_set
+
+
+def to_float(value):
+    # Convert the value to a float using pd.to_numeric()
+    try:
+        # Convert the value to a float using pd.to_numeric()
+        value_float = pd.to_numeric(value, errors='coerce')  # Convert to float and replace non-numeric values with NaN
+
+        # Replace NaN with 0
+        if pd.isna(value_float):
+            value_float = 0
+
+        return value_float
+
+    except ValueError:
+        return 0  # Handle the case where the conversion fails
 
 
 def automate_report(progress_callback=None, progress_callback_text=None):
@@ -300,23 +316,32 @@ def automate_report(progress_callback=None, progress_callback_text=None):
     path_new = f'./{date[2]}/w{date[0]}/PayTel - weekly report - Sales KPIs by sales channel_with_txns_v3_w{date[0]}.xlsx'
     df_workbook = pd.read_excel(path_prev, sheet_name=SHEETS, header=None, keep_default_na=False)
 
+    # SHEET 1
     column_0 = pd.Index(df_workbook[SHEETS[0]].iloc[5]).get_loc(f'{date[1]}_{date[3]}') + 1
     new_col = df_workbook[SHEETS[0]].iloc[:, column_0 - 1].copy()
+
+    # Change the date in header
     new_col.loc[5] = f'{date[0]}_{date[2]}'
+    print(new_col)
     increment = 1
     old_columns = range(column_0, df_workbook[SHEETS[0]].shape[1])
     new_columns = range(column_0 + increment, df_workbook[SHEETS[0]].shape[1] + increment)
     df_workbook[SHEETS[0]].rename(columns=dict(zip(old_columns, new_columns)), inplace=True)
     df_workbook[SHEETS[0]].insert(loc=column_0, column=column_0, value=new_col)
-
+    print(date)
+    # SHEET 2
     column_1 = pd.Index(df_workbook[SHEETS[1]].iloc[5]).get_loc(f'{date[1]}_{date[3]}') + 1
-    new_col = df_workbook[SHEETS[1]].iloc[:, column_0 - 1].copy()
+    new_col = df_workbook[SHEETS[1]].iloc[:, column_1 - 1].copy()
+    print(get_column_letter(column_0), get_column_letter(column_1))
+
+    # Change the date in header
     new_col.loc[5] = f'{date[0]}_{date[2]}'
+    print(new_col)
     increment = 1
-    old_columns = range(column_0, df_workbook[SHEETS[1]].shape[1])
-    new_columns = range(column_0 + increment, df_workbook[SHEETS[1]].shape[1] + increment)
+    old_columns = range(column_1, df_workbook[SHEETS[1]].shape[1])
+    new_columns = range(column_1 + increment, df_workbook[SHEETS[1]].shape[1] + increment)
     df_workbook[SHEETS[1]].rename(columns=dict(zip(old_columns, new_columns)), inplace=True)
-    df_workbook[SHEETS[1]].insert(loc=column_0, column=column_0, value=new_col)
+    df_workbook[SHEETS[1]].insert(loc=column_1, column=column_1, value=new_col)
 
     # Set progress text
     if progress_callback_text:
@@ -397,11 +422,11 @@ def automate_report(progress_callback=None, progress_callback_text=None):
 
         if v not in (13, 15, 16, 17, 18, 20, 21, 22):
             for j in range(df_view.shape[0] - 1):
-                df_view.iat[j, column_0] = data[k].iat[j, data[k].shape[1] - 1]
+                df_view.iat[j, column_0] = round(to_float(data[k].iat[j, data[k].shape[1] - 1]), 0)
             k += 1
         elif v == 13:
             for j in range(df_view.shape[0]):
-                df_view.iat[j, column_0] = data[k].iat[j, data[k].shape[1] - 1]
+                df_view.iat[j, column_0] = round(to_float(data[k].iat[j, data[k].shape[1] - 1]), 0)
 
             k += 1
         elif v == 20 or v == 17 or v == 18:
@@ -421,7 +446,10 @@ def automate_report(progress_callback=None, progress_callback_text=None):
                 if pd.isna(df_view.iat[j, column_0]) or df_view.iat[j, column_0] == 0:
                     df_view.iat[j, column_0] = 0
                 else:
-                    df_view.iat[j, column_0] = df_views[5].iat[j, column_0 - 1] / df_views[3].iat[j, column_0]
+                    try:
+                        df_view.iat[j, column_0] = to_float(df_views[5].iat[j, column_0 - 1]) / to_float(df_views[3].iat[j, column_0])
+                    except TypeError:
+                        df_view.iat[j, column_0] = 0
         elif v == 16:
             for j in range(df_view.shape[0]):
                 if pd.isna(df_views[6].iat[j, column_0]) or df_views[6].iat[j, column_0] == 0:
@@ -646,6 +674,7 @@ def automate_report(progress_callback=None, progress_callback_text=None):
     # Set progress text
     if progress_callback_text:
         progress_callback_text(f'Finished.')
+
 
 if __name__ == '__main__':
     automate_report(progress_callback=None)

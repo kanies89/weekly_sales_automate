@@ -121,8 +121,15 @@ class MyDialog(QDialog):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    dialog = MyDialog()
-    dialog.show()
-    dialog.on_start()  # Call on_start function to start the automation thread
-    sys.exit(app.exec_())
+    try:
+        # Your main program logic here
+        app = QApplication(sys.argv)
+        dialog = MyDialog()
+        dialog.show()
+        dialog.on_start()  # Call on_start function to start the automation thread
+        sys.exit(app.exec_())
+    except Exception as e:
+        print("An error occurred:", e)
+        input("Press Enter to exit...")
+        sys.exit(1)
+

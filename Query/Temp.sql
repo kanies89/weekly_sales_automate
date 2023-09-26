@@ -3,7 +3,7 @@ SET DATEFIRST 1
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 --select @ostatni_tydzien
 
 
@@ -34,7 +34,7 @@ INSERT INTO #channels VALUES ('No channel info',@rok,@ostatni_tydzien,18)
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 if object_id (N'tempdb..#t1')  is not null drop table #t1
 select 
@@ -61,7 +61,7 @@ group by td.sales_channel2,td.tr_tvid,td.week_number,td.miesiac,sd.active_date,D
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 if object_id (N'tempdb..#t2')  is not null drop table #t2
 select 
@@ -88,7 +88,7 @@ DECLARE @rok AS int
 DECLARE @rok_prev as int
 DECLARE @miesiac_prev as int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 SET @rok_prev = YEAR(CAST(DATEADD(month,-1,getdate()) as date))
 SET @miesiac_prev = MONTH(CAST(DATEADD(month,-1,getdate()) as date))
 
@@ -106,7 +106,7 @@ DECLARE @rok AS int
 DECLARE @rok_prev as int
 DECLARE @miesiac_prev as int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 SET @rok_prev = YEAR(CAST(DATEADD(month,-1,getdate()) as date))
 SET @miesiac_prev = MONTH(CAST(DATEADD(month,-1,getdate()) as date))
 
@@ -123,7 +123,7 @@ group by tr_tvid
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 if object_id (N'tempdb..#av')  is not null drop table #av
 select 
 COUNT(distinct tr_tvid) as POS,
@@ -144,7 +144,7 @@ group by sales_channel2,sc_symbol2,week_number,rok
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 if object_id (N'tempdb..#t22')  is not null drop table #t22
 select 
@@ -172,7 +172,7 @@ DECLARE @rok AS int
 DECLARE @rok_prev as int
 DECLARE @miesiac_prev as int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 SET @rok_prev = YEAR(CAST(DATEADD(month,-1,getdate()) as date))
 SET @miesiac_prev = MONTH(CAST(DATEADD(month,-1,getdate()) as date))
 
@@ -190,7 +190,7 @@ DECLARE @rok AS int
 DECLARE @rok_prev as int
 DECLARE @miesiac_prev as int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 SET @rok_prev = YEAR(CAST(DATEADD(month,-1,getdate()) as date))
 SET @miesiac_prev = MONTH(CAST(DATEADD(month,-1,getdate()) as date))
 
@@ -208,7 +208,7 @@ group by tr_tvid
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 if object_id (N'tempdb..#av1')  is not null drop table #av1
 select 
 COUNT(distinct tr_tvid) as POS,
@@ -230,7 +230,7 @@ group by sales_channel2,sc_symbol2,week_number,rok
 DECLARE @ostatni_tydzien AS int
 DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
-SET @ostatni_tydzien = datename(ww, getdate())-1
+SET @ostatni_tydzien = datename(ww, getdate())-1 
 
 if object_id (N'tempdb..#t11')  is not null drop table #t11
 select 
