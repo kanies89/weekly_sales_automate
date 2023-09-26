@@ -1,0 +1,19 @@
+,sort,sc,sales_channel2,rok,week_number,number_of_tvid_transaction
+0,1,Dealers sales channel,Dealers sales channel,2023.0,39.0,1.0
+1,2,Dealers sales channel - leads,,,,
+2,3,Direct sales and big merchants,,,,
+3,4,Direct Sales - Key clients,,,,
+4,5,MILLENNIUM,,,,
+5,6,Cooperative Banks,,,,
+6,7,Sales representatives,,,,
+7,8,Regional Sales Managers,,,,
+8,9,DSA,,,,
+9,10,Corporate Partners,,,,
+10,11,GL migration,,,,
+11,12,Remote sales Millennium,Remote sales Millennium,2023.0,39.0,5.0
+12,13,Remote sales NestBank,Remote sales NestBank,2023.0,39.0,0.0
+13,14,Remote sales other,Remote sales other,2023.0,39.0,2.0
+14,15,ICP,,,,
+15,16,Multipay,,,,
+16,17,Operations,,,,
+17,18,No channel info,,,,
