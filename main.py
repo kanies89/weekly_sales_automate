@@ -39,25 +39,33 @@ def week(override=None):
     if override is None:
         week_number = datetime.datetime.now().isocalendar()[1] - 1
 
-        if week_number == 0:
-            week_number = 52
-            year = datetime.datetime.now().year - 1
-        else:
-            year = datetime.datetime.now().year
-        print('week_number: ', week_number)
-        prev_week_number = week_number - 1
-        if prev_week_number == 0:
+        if week_number == 1:
             prev_week_number = 52
-            year = datetime.datetime.now().year - 1
+        else:
+            prev_week_number = week_number - 1
+
+        year = datetime.datetime.now().year
+
+        if prev_week_number == 52:
+            prev_year = datetime.datetime.now().year - 1
         else:
             prev_year = year
+
+        print('week_number: ', week_number)
         print('prev_week_number: ', prev_week_number)
+        print('year: ', year)
+        print('prev_year: ', prev_year)
     else:
         print("HERE", override)
-        week_number = override
-        prev_week_number = week_number - 1
-        year = datetime.datetime.now().year
-        prev_year = datetime.datetime.now().year
+        week_number = override[0]
+        year = override[1]
+
+        if week_number == 1:
+            prev_week_number = 52
+            prev_year = year - 1
+        else:
+            prev_week_number = week_number - 1
+            prev_year = datetime.datetime.now().year
 
     return week_number, prev_week_number, year, prev_year
 
@@ -83,6 +91,7 @@ def copy_wb(from_workbook, to_workbook, dataframe, sheets, progress_callback=Non
         sheet = wb[sheet_name]
         for row in dataframe[sheet_name].index:
             for col in dataframe[sheet_name].columns:
+                print(col)
                 coord = openpyxl.utils.get_column_letter(col + 1) + str(row + 1)
                 new_value = dataframe[sheet_name].iat[row, col]
 
@@ -578,9 +587,22 @@ def automate_report(progress_callback=None, progress_callback_text=None):
         index = df_view.iloc[:df_view.shape[0] - 1, column_0].index[0] - 1
         df_workbook[SHEETS[sheet]].iat[index, column_0] = f'{date[0]}_{date[2]}'
 
+        if date[0] == 111212121:
+            print("HERE")
+            col_name = f'{date[3]} Total'
+            try:
+                col_index = pd.Index(df_workbook[SHEETS[0]].iloc[5]).get_loc(col_name)
+            except KeyError:
+                print("Not found")
+
+            df_workbook[SHEETS[0]].insert(col_index, 'New_Empty_Column', value=pd.NA)
+            df_workbook[SHEETS[0]].iat[5, col_index] = f' {date[2]} Total'
+            print("HERE")
+
         # If current year False -> no  "current year Total" column, then column was added and needs to change the header
         if current_year != True:
-            col_name = f' {date[2]} Total'
+            print('??here??')
+            col_name = f'{date[2]} Total'
             column = pd.Index(df_workbook[SHEETS[0]].iloc[5]).get_loc(col_name)
             index = df_view.iloc[:df_view.shape[0] - 1, column].index[0] - 1
             df_workbook[SHEETS[0]].iat[index, column - 1] = col_name

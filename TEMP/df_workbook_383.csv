@@ -1,0 +1,19 @@
+,sort,sc,sc_symbol2,rok,week_number,qty
+0,1,Dealers sales channel,DL,2023.0,40.0,2531210.0
+1,2,Dealers sales channel - leads,DL-LEAD,2023.0,40.0,5018.0
+2,3,Direct sales and big merchants,Direct sales,2023.0,40.0,258562.0
+3,4,Direct Sales - Key clients,DSK,2023.0,40.0,19715.0
+4,5,MILLENNIUM,MM,2023.0,40.0,81037.0
+5,6,Cooperative Banks,BANKI,2023.0,40.0,4133.0
+6,7,Sales representatives,SR,2023.0,40.0,66543.0
+7,8,Regional Sales Managers,RMS,2023.0,40.0,193071.0
+8,9,DSA,,,,
+9,10,Corporate Partners,CP,2023.0,40.0,40.0
+10,11,GL migration,GL,2023.0,40.0,78258.0
+11,12,Remote sales Millennium,Remote sales Millennium,2023.0,40.0,2464.0
+12,13,Remote sales NestBank,Remote sales NestBank,2023.0,40.0,185.0
+13,14,Remote sales other,Remote sales other,2023.0,40.0,32469.0
+14,15,ICP,ICP,2023.0,40.0,17655.0
+15,16,Multipay,Multipay,2023.0,40.0,3817.0
+16,17,Operations,OP,2023.0,40.0,67070.0
+17,18,No channel info,No channel info,2023.0,40.0,4538.0

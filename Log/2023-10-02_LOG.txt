@@ -1,0 +1,32 @@
+starting the function
+Folder structure already exists.
+Folder structure already exists.
+week_number:  39
+prev_week_number:  38
+Folder structure already exists.
+0      
+1      
+2      
+3      
+4      
+     ..
+79     
+80     
+81     
+82     
+83     
+Name: 197, Length: 84, dtype: object
+(39, 38, 2023, 2023)
+GP GP
+0         
+1         
+2         
+3         
+4         
+      ... 
+489    0.4
+490      -
+491      -
+492      -
+493      -
+Name: 197, Length: 494, dtype: object
