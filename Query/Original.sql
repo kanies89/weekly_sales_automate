@@ -10,24 +10,25 @@ SET @ostatni_tydzien = datename(ww, getdate())-1
 IF OBJECT_ID ('tempdb..#channels') IS NOT NULL DROP TABLE #channels
 CREATE TABLE #channels
 (sc varchar(32),rok int,week int,sort int) 
+INSERT INTO #channels VALUES ('Dealers sales channel',@rok,@ostatni_tydzien,1)
+INSERT INTO #channels VALUES ('Dealers sales channel - leads',@rok,@ostatni_tydzien,2)
 INSERT INTO #channels VALUES ('Direct sales and big merchants',@rok,@ostatni_tydzien,3)
+INSERT INTO #channels VALUES ('Direct Sales - Key clients',@rok,@ostatni_tydzien,4)
+INSERT INTO #channels VALUES ('MILLENNIUM',@rok,@ostatni_tydzien,5)
+INSERT INTO #channels VALUES ('Cooperative Banks',@rok,@ostatni_tydzien,6)
+INSERT INTO #channels VALUES ('Sales representatives',@rok,@ostatni_tydzien,7)
+INSERT INTO #channels VALUES ('Regional Sales Managers',@rok,@ostatni_tydzien,8)
 INSERT INTO #channels VALUES ('DSA',@rok,@ostatni_tydzien,9)
 INSERT INTO #channels VALUES ('Corporate Partners',@rok,@ostatni_tydzien,10)
-INSERT INTO #channels VALUES ('MILLENNIUM',@rok,@ostatni_tydzien,5)
-INSERT INTO #channels VALUES ('Remote sales Millennium',@rok,@ostatni_tydzien,12)
-INSERT INTO #channels VALUES ('Cooperative Banks',@rok,@ostatni_tydzien,6)
-INSERT INTO #channels VALUES ('Direct Sales - Key clients',@rok,@ostatni_tydzien,4)
 INSERT INTO #channels VALUES ('GL migration',@rok,@ostatni_tydzien,11)
-INSERT INTO #channels VALUES ('Regional Sales Managers',@rok,@ostatni_tydzien,8)
-INSERT INTO #channels VALUES ('Dealers sales channel',@rok,@ostatni_tydzien,1)
-INSERT INTO #channels VALUES ('Sales representatives',@rok,@ostatni_tydzien,7)
-INSERT INTO #channels VALUES ('Dealers sales channel - leads',@rok,@ostatni_tydzien,2)
-INSERT INTO #channels VALUES ('Operations',@rok,@ostatni_tydzien,17)
-INSERT INTO #channels VALUES ('Multipay',@rok,@ostatni_tydzien,16)
-INSERT INTO #channels VALUES ('ICP',@rok,@ostatni_tydzien,15)
-INSERT INTO #channels VALUES ('Remote sales other',@rok,@ostatni_tydzien,14)
+INSERT INTO #channels VALUES ('Remote sales Millennium',@rok,@ostatni_tydzien,12)
 INSERT INTO #channels VALUES ('Remote sales NestBank',@rok,@ostatni_tydzien,13)
+INSERT INTO #channels VALUES ('Remote sales other',@rok,@ostatni_tydzien,14)
+INSERT INTO #channels VALUES ('ICP',@rok,@ostatni_tydzien,15)
+INSERT INTO #channels VALUES ('Multipay',@rok,@ostatni_tydzien,16)
+INSERT INTO #channels VALUES ('Operations',@rok,@ostatni_tydzien,17)
 INSERT INTO #channels VALUES ('No channel info',@rok,@ostatni_tydzien,18)
+INSERT INTO #channels VALUES ('KAR-TEL',@rok,@ostatni_tydzien,19)
 
 
 ----===== # CONTRACTS (for installed and activated POS & LightPOS)
@@ -254,7 +255,7 @@ DECLARE @rok AS int
 SET @rok = YEAR(DATEADD(ww, -1,getdate()))
 SET @ostatni_tydzien = datename(ww, getdate())-1
 
-if object_id (N'tempdb..#t2')  is not null drop table #t2
+if object_id (N'tempdb..#t22')  is not null drop table #t22
 select 
 td.sales_channel2,
 tr_tvid,SUM(cast(td.value as money))/100 as val,
@@ -263,7 +264,7 @@ td.miesiac as mies_txn,
 sd.active_date,
 DATEPART(week,sd.active_date) as week_act,
 DATEPART(month,sd.active_date) as month_act 
-into #t2
+into #t22
 from [konkursy].[dbo].[sales_channel_trans_details] td
 left join [konkursy].[dbo].[sales_channel_details] sd on sd.t_vid=td.tr_tvid Collate Polish_CI_AS
 where DATEPART(YEAR,sd.active_date)>=@rok and 
@@ -277,7 +278,7 @@ group by td.sales_channel2,td.tr_tvid,td.week_number,td.miesiac,sd.active_date,D
 select 
 c.sort,c.sc,sales_channel2,ISNULL(SUM(val),0) as value 
 from #channels c
-left join #t2 t on c.sc = t.sales_channel2 collate Polish_CS_AI
+left join #t22 t on c.sc = t.sales_channel2 collate Polish_CS_AI
 group by c.sort,c.sc,sales_channel2
 order by c.sort
 

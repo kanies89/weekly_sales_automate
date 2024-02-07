@@ -1,0 +1,19 @@
+,sort,sc,sales_channel2,rok,week_number,AVG_days_first_transaction
+0,1,Dealers sales channel,Dealers sales channel,2024.0,5.0,0.6981
+1,2,Dealers sales channel - leads,,,,
+2,3,Direct sales and big merchants,Direct sales and big merchants,2024.0,5.0,0.1481
+3,4,Direct Sales - Key clients,,,,
+4,5,MILLENNIUM,MILLENNIUM,2024.0,5.0,0.5000
+5,6,Cooperative Banks,,,,
+6,7,Sales representatives,,,,
+7,8,Regional Sales Managers,Regional Sales Managers,2024.0,5.0,
+8,9,DSA,,,,
+9,10,Corporate Partners,,,,
+10,11,GL migration,,,,
+11,12,Remote sales Millennium,Remote sales Millennium,2024.0,5.0,
+12,13,Remote sales NestBank,,,,
+13,14,Remote sales other,Remote sales other,2024.0,5.0,0.3333
+14,15,ICP,,,,
+15,16,Multipay,,,,
+16,17,Operations,Operations,2024.0,5.0,1.0000
+17,18,No channel info,,,,

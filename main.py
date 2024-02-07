@@ -381,45 +381,26 @@ def automate_report(progress_callback=None, progress_callback_text=None):
     if progress_callback_text:
         progress_callback_text(f'Making the dataframe views.')
 
-    # SHEET 0 i in range(3)
-    for i in range(3):
-        df_title.append(df_workbook[SHEETS[0]].iat[5 + i * 25 - 3, 1])
+    length = data[0].shape[0]
+    for i in range(23):
+        if i < 3:
+            df_table_number = df_workbook[SHEETS[0]][0]
+            print(i)
+            row = df_table_number[df_table_number == i].index[0]
+            df_title.append(df_workbook[SHEETS[0]].iat[row - 3, 1])
 
-        # Make the view of single table
-        df_view = df_workbook[SHEETS[0]][6 + i * 25:25 + i * 25]
-        df_views.append(df_view)
+            # Make the view of single table
+            df_view = df_workbook[SHEETS[0]][row + 1:row + length]
+            df_views.append(df_view)
+        else:
+            df_table_number = df_workbook[SHEETS[1]][0]
+            row = df_table_number[df_table_number == i].index[0]
+            print(i, row, " : ", row + length)
+            df_title.append(df_workbook[SHEETS[1]].iat[row - 3, 1])
 
-    # SHEET 1 i in range(10)
-    for i in range(10):
-        df_title.append(df_workbook[SHEETS[1]].iat[5 + i * 25 - 3, 1])
-
-        # Make the view of single table
-        df_view = df_workbook[SHEETS[1]][6 + i * 25:25 + i * 25]
-        df_views.append(df_view)
-
-    # SHEET 1 i in range(5)
-    for i in range(5):
-        df_title.append(df_workbook[SHEETS[1]].iat[255 + i * 24 - 3, 1])
-
-        # Make the view of single table
-        df_view = df_workbook[SHEETS[1]][256 + i * 24:274 + i * 24]
-        df_views.append(df_view)
-
-    # SHEET 1 i in range(2)
-    for i in range(2):
-        df_title.append(df_workbook[SHEETS[1]].iat[377 + i * 26 - 3, 1])
-
-        # Make the view of single table
-        df_view = df_workbook[SHEETS[1]][378 + i * 26:396 + i * 26]
-        df_views.append(df_view)
-
-    # SHEET 1 i in range(3)
-    for i in range(3):
-        df_title.append(df_workbook[SHEETS[1]].iat[427 + i * 24 - 3, 1])
-
-        # Make the view of single table
-        df_view = df_workbook[SHEETS[1]][428 + i * 24:446 + i * 24]
-        df_views.append(df_view)
+            # Make the view of single table
+            df_view = df_workbook[SHEETS[1]][row + 1:row + length]
+            df_views.append(df_view)
 
     k = 0
     # Add new values taken from Query
@@ -457,7 +438,7 @@ def automate_report(progress_callback=None, progress_callback_text=None):
                 else:
                     try:
                         df_view.iat[j, column_0] = to_float(df_views[5].iat[j, column_0 - 1]) / to_float(df_views[3].iat[j, column_0])
-                    except TypeError:
+                    except (TypeError, ZeroDivisionError):
                         df_view.iat[j, column_0] = 0
         elif v == 16:
             for j in range(df_view.shape[0]):
@@ -699,4 +680,4 @@ def automate_report(progress_callback=None, progress_callback_text=None):
 
 
 if __name__ == '__main__':
-    automate_report(progress_callback=None)
+    automate_report()
